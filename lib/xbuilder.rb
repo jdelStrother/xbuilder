@@ -1,4 +1,3 @@
-require 'blankslate'
 require 'libxml'
 
 # == Usage
@@ -9,9 +8,9 @@ require 'libxml'
 #   xml.node attr: 1 do |xml|     #=> <node attr="1">
 #     xml.ns :child, attr: 2      #=>   <ns:child attr="2"/>
 #   end                           #=> </node>
-class Xbuilder < BlankSlate
+class Xbuilder < ::BasicObject
   XML = ::LibXML::XML #:nodoc:
-  define_method(:__class, find_hidden_method(:class))
+  def __class; (class << self; self end).superclass; end
 
   # Create an XML builder. Available options are:
   #
@@ -156,12 +155,13 @@ class Xbuilder < BlankSlate
 
   def __ensure_no_block(given)
     if given
-      ::Kernel.raise ArgumentError.new("Blocks are not allowed on XML instructions")
+      ::Kernel.raise ::ArgumentError.new("Blocks are not allowed on XML instructions")
     end
   end
 
   def __warn(msg)
-    ::Kernel.warn("Xbuilder WARNING: #{msg}")
+    
+    ::Kernel.raise("Xbuilder WARNING: #{msg}")
   end
 
 end

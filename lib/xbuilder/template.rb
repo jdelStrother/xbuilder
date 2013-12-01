@@ -1,6 +1,4 @@
 class XbuilderTemplate < Xbuilder
-  define_method(:__instance_variable_set, find_hidden_method(:instance_variable_set))
-
   def self.encode(context)
     xml = self.new
     xml.__instance_variable_set(:@context, context)
@@ -19,12 +17,16 @@ class XbuilderTemplate < Xbuilder
     end
   end
 
-  private
+  protected
 
   def __new_instance(*args)
-    xml = super
-    xml.__instance_variable_set(:@context, @context)
-    xml
+    new_instance = super
+    new_instance.__set_context(@context)
+    new_instance
+  end
+
+  def __set_context(context)
+    @context = context
   end
 
 end
